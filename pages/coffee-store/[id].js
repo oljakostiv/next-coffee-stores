@@ -64,13 +64,13 @@ const CoffeeStore = (initialProps) => {
           name,
           address: address || "",
           neighborhood: neighborhood || "",
-          voting: 0, //by default;
+          voting: 0,
           imgUrl,
         }),
       });
 
       const dbCoffeeStore = await response.json();
-      console.log(dbCoffeeStore);
+      console.log("table:", dbCoffeeStore);
     } catch (e) {
       console.error("Error creating or finding store!", e);
     }
@@ -90,8 +90,11 @@ const CoffeeStore = (initialProps) => {
           handleCreateCoffeeStore(coffeeStoreFromContext); //from airtable;
         }
       }
+    } else {
+      // SSG (запис у airtable з сервера):
+      handleCreateCoffeeStore(initialProps.coffeeStore);
     }
-  }, [id]);
+  }, [id, initialProps, initialProps.coffeeStore, coffeeStores]);
 
   const { name, address, neighborhood, imgUrl } = coffeeStore;
 
@@ -158,7 +161,7 @@ const CoffeeStore = (initialProps) => {
               width={24}
               height={24}
             />
-            <p className={styles.text}>1</p>
+            <p className={styles.text}>0</p>
           </div>
           <button className={styles.upvoteButton} onClick={handleUpvoteButton}>
             Up vote!

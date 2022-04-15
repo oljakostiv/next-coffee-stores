@@ -25,9 +25,6 @@ const createCoffeeStore = async (req, res) => {
           res.json(records);
         }
 
-        // const records = getRecords(findCoffeeStoreRecords) ?? [];
-        // res.json(records);
-
         //create store:
         if (name) {
           const createCoffeeStoreRecords = await table.create([
@@ -45,10 +42,12 @@ const createCoffeeStore = async (req, res) => {
 
           const records = getRecords(createCoffeeStoreRecords);
           res.json(records);
+        } else {
+          res.status(400).json("Id and name are required!");
         }
-        res.status(400).json("Id and name are required!");
+      } else {
+        res.status(400).json("Id is required!");
       }
-      res.status(400).json("Id is required!");
     } catch (e) {
       console.error(e);
       res.status(500).json("Error creating or finding store!", e);

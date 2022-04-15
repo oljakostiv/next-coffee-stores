@@ -23,7 +23,7 @@ export default function Home({ coffeeStoresData }) {
   const { handleTrackLocation, locationErrorMess, isFindingLocation } =
     useTrackLocation();
 
-  console.log(coffeeStoresData);
+  console.log("data:", coffeeStoresData);
 
   // const [localCoffeeStores, setLocalCoffeeStores] = useState("");
   const [coffeeStoresError, setCoffeeStoresError] = useState(null);
@@ -60,7 +60,7 @@ export default function Home({ coffeeStoresData }) {
     handleTrackLocation();
   };
 
-  console.log(latLong);
+  console.log("location:", latLong);
 
   return (
     <div className={styles.container}>
