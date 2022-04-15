@@ -48,15 +48,47 @@ const CoffeeStore = (initialProps) => {
     state: { coffeeStores },
   } = useContext(Context);
 
+  //якщо не спрацьовує по локації:
+  const handleCreateCoffeeStore = async (coffeeStore) => {
+    try {
+      const { id, name, address, neighborhood, voting, imgUrl } = coffeeStore;
+
+      //uploading JSON data:
+      const response = await fetch("/api/createCoffeeStore", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          name,
+          address: address || "",
+          neighborhood: neighborhood || "",
+          voting: 0, //by default;
+          imgUrl,
+        }),
+      });
+
+      const dbCoffeeStore = await response.json();
+      console.log(dbCoffeeStore);
+    } catch (e) {
+      console.error("Error creating or finding store!", e);
+    }
+  };
+
   useEffect(() => {
     //перевірка dynamic id:
     if (isEmpty(initialProps.coffeeStore)) {
       //used from context:
       if (coffeeStores.length > 0) {
-        const findCoffeeStoreById = coffeeStores.find((store) => {
+        const coffeeStoreFromContext = coffeeStores.find((store) => {
           return store.id.toString() === id;
         });
-        setCoffeeStore(findCoffeeStoreById);
+
+        if (coffeeStoreFromContext) {
+          setCoffeeStore(coffeeStoreFromContext);
+          handleCreateCoffeeStore(coffeeStoreFromContext); //from airtable;
+        }
       }
     }
   }, [id]);
