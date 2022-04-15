@@ -61,7 +61,7 @@ const CoffeeStore = (initialProps) => {
     }
   }, [id]);
 
-  const { name, address, neighbourhood, imgUrl } = coffeeStore;
+  const { name, address, neighborhood, imgUrl } = coffeeStore;
 
   if (router.isFallback) {
     return <div>Loading..</div>;
@@ -117,7 +117,7 @@ const CoffeeStore = (initialProps) => {
               width={24}
               height={24}
             />
-            <p className={styles.text}>{neighbourhood}</p>
+            <p className={styles.text}>{neighborhood}</p>
           </div>
           <div className={styles.iconWrapper}>
             <Image
