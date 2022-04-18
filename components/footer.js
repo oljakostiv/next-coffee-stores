@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import styles from "./footer.module.css";
 
 const Footer = () => {
   return (
@@ -9,8 +9,8 @@ const Footer = () => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <span className={styles.mr1}>Created by Olha Kostv</span>
-        <Image src="/github-1.svg" alt="github Logo" width={30} height={30} />
+        <span className={styles.text}>Created by Olha Kostv</span>
+        <Image src="/github-1.svg" alt="github Logo" width={20} height={20} />
       </a>
     </footer>
   );

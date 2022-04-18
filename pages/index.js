@@ -4,6 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import { ACTION_TYPES, Context } from "../store/store-context";
 import Banner from "../components/banner.js";
 import Card from "../components/card";
+import Footer from "../components/footer";
 import { fetchCoffeeStores } from "../lib/coffee-stores.js";
 import { useTrackLocation } from "../hooks/use-track-location.js";
 import styles from "../styles/Home.module.css";
@@ -22,9 +23,6 @@ export default function Home({ coffeeStoresData }) {
   //custom hook for local::
   const { handleTrackLocation, locationErrorMess, isFindingLocation } =
     useTrackLocation();
-
-  console.log("data:", coffeeStoresData);
-
   // const [localCoffeeStores, setLocalCoffeeStores] = useState("");
   const [coffeeStoresError, setCoffeeStoresError] = useState(null);
 
@@ -42,7 +40,6 @@ export default function Home({ coffeeStoresData }) {
           );
           const fetchLocalCoffeeStores = await response.json();
 
-          // setLocalCoffeeStores(fetchLocalCoffeeStores);
           dispatch({
             type: ACTION_TYPES.SET_COFFEE_STORES,
             payload: { coffeeStores: fetchLocalCoffeeStores },
@@ -59,8 +56,6 @@ export default function Home({ coffeeStoresData }) {
   const handleOnBannerBtnClick = () => {
     handleTrackLocation();
   };
-
-  console.log("location:", latLong);
 
   return (
     <div className={styles.container}>
@@ -84,12 +79,10 @@ export default function Home({ coffeeStoresData }) {
             height={400}
           />
         </div>
-        {/* {localCoffeeStores.length > 0 && ( */}
         {coffeeStores.length > 0 && (
           <div className={styles.sectionWrapper}>
             <h2 className={styles.heading2}>Stores near me</h2>
             <div className={styles.cardLayout}>
-              {/* {localCoffeeStores.map((store) => { */}
               {coffeeStores.map((store) => {
                 return (
                   <Card
@@ -128,6 +121,7 @@ export default function Home({ coffeeStoresData }) {
             </div>
           </div>
         )}
+        <Footer />
       </main>
     </div>
   );

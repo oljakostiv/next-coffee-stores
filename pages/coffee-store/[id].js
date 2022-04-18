@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useContext, useState, useEffect } from "react";
 import useSWR from "swr";
 import { fetchCoffeeStores } from "../../lib/coffee-stores.js";
+import Footer from "../../components/footer.js";
 import { isEmpty, fetcher } from "../../utils";
 import { Context } from "../../store/store-context";
 import styles from "../../styles/coffee-store.module.css";
@@ -42,19 +43,22 @@ export async function getStaticProps({ params }) {
 const CoffeeStore = (initialProps) => {
   const router = useRouter();
   const { id } = router.query;
+
   const [coffeeStore, setCoffeeStore] = useState(
     initialProps.coffeeStore || {}
   );
   const [votingCount, setVotingCount] = useState(0);
+
   const {
     state: { coffeeStores },
   } = useContext(Context);
+
   const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${id}`, fetcher);
 
   //якщо не спрацьовує по локації:
   const handleCreateCoffeeStore = async (coffeeStore) => {
     try {
-      const { id, name, address, neighborhood, imgUrl } = coffeeStore;
+      const { id, name, address, neighborhood, voting, imgUrl } = coffeeStore;
 
       //uploading JSON data:
       const response = await fetch("/api/createCoffeeStore", {
@@ -72,8 +76,7 @@ const CoffeeStore = (initialProps) => {
         }),
       });
 
-      const dbCoffeeStore = await response.json();
-      console.log("table:", dbCoffeeStore);
+      await response.json();
     } catch (e) {
       console.error("Error creating or finding store!", e);
     }
@@ -99,13 +102,17 @@ const CoffeeStore = (initialProps) => {
     }
   }, [id, initialProps, initialProps.coffeeStore, coffeeStores]);
 
-  const { name, address, neighborhood, imgUrl } = coffeeStore;
+  const {
+    name = "",
+    address = "",
+    neighborhood = "",
+    imgUrl = "",
+  } = coffeeStore;
 
   //for swr hook:
   useEffect(() => {
     if (data && data.length > 0) {
       // from server-props:
-      console.log("data from swr:", data);
       setCoffeeStore(data[0]);
       //update store voting, using state from airtable:
       setVotingCount(data[0].voting);
@@ -205,6 +212,7 @@ const CoffeeStore = (initialProps) => {
           </button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

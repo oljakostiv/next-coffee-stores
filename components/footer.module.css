@@ -1,0 +1,20 @@
+.footer {
+  background-size: cover;
+  background-position: top;
+  display: flex;
+  justify-content: space-around;
+  padding: 5px 15px;
+  margin-top: 2rem;
+}
+
+.text {
+  margin-right: 5px;
+  color: black;
+  font-size: 13px;
+}
+
+@media only screen and (min-width: 768px) {
+  .footer {
+    font-size: initial;
+  }
+}

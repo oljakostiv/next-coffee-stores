@@ -9,9 +9,9 @@ const getCoffeeStoreById = async (req, res) => {
 
       if (records.length !== 0) {
         res.json(records);
+      } else {
+        res.json("Id couldn't be found.");
       }
-
-      res.json("Id couldn't be found.");
     } else {
       res.status(400).json("Id is required!");
     }
