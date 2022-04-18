@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState, useEffect } from "react";
+import useSWR from "swr";
 import { fetchCoffeeStores } from "../../lib/coffee-stores.js";
-import { isEmpty } from "../../utils";
+import { isEmpty, fetcher } from "../../utils";
 import { Context } from "../../store/store-context";
 import styles from "../../styles/coffee-store.module.css";
 
@@ -41,19 +42,19 @@ export async function getStaticProps({ params }) {
 const CoffeeStore = (initialProps) => {
   const router = useRouter();
   const { id } = router.query;
-
-  const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
-
+  const [coffeeStore, setCoffeeStore] = useState(
+    initialProps.coffeeStore || {}
+  );
   const [votingCount, setVotingCount] = useState(0);
-
   const {
     state: { coffeeStores },
   } = useContext(Context);
+  const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${id}`, fetcher);
 
   //якщо не спрацьовує по локації:
   const handleCreateCoffeeStore = async (coffeeStore) => {
     try {
-      const { id, name, address, neighborhood, voting, imgUrl } = coffeeStore;
+      const { id, name, address, neighborhood, imgUrl } = coffeeStore;
 
       //uploading JSON data:
       const response = await fetch("/api/createCoffeeStore", {
@@ -100,15 +101,47 @@ const CoffeeStore = (initialProps) => {
 
   const { name, address, neighborhood, imgUrl } = coffeeStore;
 
+  //for swr hook:
+  useEffect(() => {
+    if (data && data.length > 0) {
+      // from server-props:
+      console.log("data from swr:", data);
+      setCoffeeStore(data[0]);
+      //update store voting, using state from airtable:
+      setVotingCount(data[0].voting);
+    }
+  }, [data]);
+
   if (router.isFallback) {
     return <div>Loading..</div>;
   }
 
-  const handleUpvoteButton = () => {
-    console.log("Up vote!");
-    const count = votingCount + 1;
-    setVotingCount(count);
+  const handleUpvoteButton = async () => {
+    try {
+      const response = await fetch("/api/upvoteCoffeeStoreById", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id, //from router query;
+        }),
+      });
+
+      const dbCoffeeStore = await response.json();
+
+      if (dbCoffeeStore && dbCoffeeStore.length > 0) {
+        let count = votingCount + 1;
+        setVotingCount(count);
+      }
+    } catch (e) {
+      console.error("Error upvoting the Coffee Store!", e);
+    }
   };
+
+  if (error) {
+    return <div>Something went wrong retrieving Coffee Store page.</div>;
+  }
 
   return (
     <div className={styles.layout}>
