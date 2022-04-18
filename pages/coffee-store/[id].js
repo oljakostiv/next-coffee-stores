@@ -44,6 +44,8 @@ const CoffeeStore = (initialProps) => {
 
   const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
 
+  const [votingCount, setVotingCount] = useState(0);
+
   const {
     state: { coffeeStores },
   } = useContext(Context);
@@ -104,6 +106,8 @@ const CoffeeStore = (initialProps) => {
 
   const handleUpvoteButton = () => {
     console.log("Up vote!");
+    const count = votingCount + 1;
+    setVotingCount(count);
   };
 
   return (
@@ -161,7 +165,7 @@ const CoffeeStore = (initialProps) => {
               width={24}
               height={24}
             />
-            <p className={styles.text}>0</p>
+            <p className={styles.text}>{votingCount}</p>
           </div>
           <button className={styles.upvoteButton} onClick={handleUpvoteButton}>
             Up vote!

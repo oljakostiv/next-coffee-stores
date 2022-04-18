@@ -1,11 +1,4 @@
-import { getRecords } from "../../lib/airtable";
-
-const Airtable = require("airtable");
-const base = new Airtable({
-  apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
-}).base(process.env.NEXT_PUBLIC_AIRTABLE_BASE_KEY);
-
-const table = base("coffee-stores");
+import { table, findRecordByFilter } from "../../lib/airtable";
 
 const createCoffeeStore = async (req, res) => {
   if (req.method === "POST") {
@@ -14,36 +7,32 @@ const createCoffeeStore = async (req, res) => {
     //find store:
     try {
       if (id) {
-        const findCoffeeStoreRecords = await table
-          .select({
-            filterByFormula: `id='${id}'`, //default from 'airtable';
-          })
-          .firstPage(); //default;
+        const records = await findRecordByFilter(id);
 
-        if (findCoffeeStoreRecords.length !== 0) {
-          const records = getRecords(findCoffeeStoreRecords);
-          res.json(records);
-        }
-
-        //create store:
-        if (name) {
-          const createCoffeeStoreRecords = await table.create([
-            {
-              fields: {
-                id,
-                name,
-                address,
-                neighborhood,
-                voting,
-                imgUrl,
-              },
-            },
-          ]);
-
-          const records = getRecords(createCoffeeStoreRecords);
+        if (records.length !== 0) {
           res.json(records);
         } else {
-          res.status(400).json("Id and name are required!");
+          // create store:
+          if (name) {
+            const createCoffeeStoreRecords = await table.create([
+              {
+                fields: {
+                  id,
+                  name,
+                  address,
+                  neighborhood,
+                  voting,
+                  imgUrl,
+                },
+              },
+            ]);
+
+            const records = getRecords(createCoffeeStoreRecords);
+
+            res.json(records);
+          } else {
+            res.status(400).json("Id and name are required!");
+          }
         }
       } else {
         res.status(400).json("Id is required!");
