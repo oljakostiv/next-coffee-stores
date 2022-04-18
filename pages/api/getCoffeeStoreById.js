@@ -2,8 +2,9 @@ import { findRecordByFilter } from "../../lib/airtable";
 
 //serverless fn (for swr hook):
 const getCoffeeStoreById = async (req, res) => {
+  const { id } = req.query;
+
   try {
-    const { id } = req.query;
     if (id) {
       const records = await findRecordByFilter(id);
 

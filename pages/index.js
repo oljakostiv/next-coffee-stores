@@ -62,6 +62,10 @@ export default function Home({ coffeeStoresData }) {
       <Head>
         <title>Coffee Stores</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content="allows you to discover coffee stores"
+        ></meta>
       </Head>
 
       <main className={styles.main}>
@@ -76,7 +80,7 @@ export default function Home({ coffeeStoresData }) {
             src="/static/hero-image.png"
             alt="hero-image"
             width={700}
-            height={400}
+            height={300}
           />
         </div>
         {coffeeStores.length > 0 && (

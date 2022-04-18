@@ -119,10 +119,6 @@ const CoffeeStore = (initialProps) => {
     }
   }, [data]);
 
-  if (router.isFallback) {
-    return <div>Loading..</div>;
-  }
-
   const handleUpvoteButton = async () => {
     try {
       const response = await fetch("/api/upvoteCoffeeStoreById", {
@@ -145,6 +141,10 @@ const CoffeeStore = (initialProps) => {
       console.error("Error upvoting the Coffee Store!", e);
     }
   };
+
+  if (router.isFallback) return <div>Loading..</div>;
+
+  if (!data) return <div>Loading...</div>;
 
   if (error) {
     return <div>Something went wrong retrieving Coffee Store page.</div>;

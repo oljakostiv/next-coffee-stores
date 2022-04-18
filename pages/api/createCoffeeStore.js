@@ -2,10 +2,9 @@ import { table, findRecordByFilter, getRecords } from "../../lib/airtable";
 
 const createCoffeeStore = async (req, res) => {
   if (req.method === "POST") {
+    const { id, name, address, neighborhood, voting, imgUrl } = req.body;
     //find store:
     try {
-      const { id, name, address, neighborhood, voting, imgUrl } = req.body;
-
       if (id) {
         const records = await findRecordByFilter(id);
 
