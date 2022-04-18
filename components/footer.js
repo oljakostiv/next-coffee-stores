@@ -9,7 +9,7 @@ const Footer = () => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <span className={styles.text}>Created by Olha Kostv</span>
+        <span className={styles.text}>Created by Olha Kostiv</span>
         <Image src="/github-1.svg" alt="github Logo" width={20} height={20} />
       </a>
     </footer>
